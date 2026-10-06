@@ -1,0 +1,864 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Smart Course</title>
+
+<style>
+*{
+    box-sizing:border-box;
+}
+
+body{
+    margin:0;
+    font-family:Arial,sans-serif;
+    background:#f4f6f8;
+    color:#222;
+}
+
+header{
+    background:#1565c0;
+    color:white;
+    padding:16px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+header h2{
+    margin:0;
+}
+
+button{
+    border:0;
+    border-radius:8px;
+    padding:12px 16px;
+    font-size:15px;
+    cursor:pointer;
+}
+
+.container{
+    padding:18px;
+    max-width:700px;
+    margin:auto;
+}
+
+.card{
+    background:white;
+    padding:20px;
+    border-radius:15px;
+    margin-bottom:15px;
+    box-shadow:0 2px 10px rgba(0,0,0,.08);
+}
+
+.price{
+    font-size:35px;
+    font-weight:bold;
+    color:#1565c0;
+    text-align:center;
+    margin:15px;
+}
+
+.pay{
+    width:100%;
+    background:#1b5e20;
+    color:white;
+    margin-top:10px;
+}
+
+.redeem{
+    width:100%;
+    background:#ff8f00;
+    color:white;
+}
+
+input,select{
+    width:100%;
+    padding:13px;
+    border:1px solid #ccc;
+    border-radius:8px;
+    margin:8px 0;
+    font-size:16px;
+}
+
+.hidden{
+    display:none;
+}
+
+.lesson{
+    background:white;
+    margin:10px 0;
+    padding:16px;
+    border-radius:12px;
+    box-shadow:0 2px 8px rgba(0,0,0,.08);
+}
+
+.lesson h3{
+    color:#1565c0;
+}
+
+.lock{
+    text-align:center;
+    padding-top:30px;
+}
+
+.settings{
+    background:white;
+    padding:20px;
+    border-radius:15px;
+}
+
+.small{
+    color:#666;
+    font-size:13px;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <h2>📚 Smart Course</h2>
+    <div>
+        <button onclick="openSettings()">⚙️</button>
+        <button onclick="logout()">Logout</button>
+    </div>
+</header>
+
+
+<!-- LOCK SCREEN -->
+
+<div id="lockScreen" class="container">
+
+    <div class="card lock">
+
+        <h1>🔒 Course Locked</h1>
+
+        <p>
+            Smart Course खरीदकर सभी lessons पढ़ें।
+        </p>
+
+        <div class="price">₹29</div>
+
+        <p>
+            एक बार खरीदें और Course को Unlock करें।
+        </p>
+
+        <button class="pay" onclick="payNow()">
+            💳 ₹29 Pay Now
+        </button>
+
+        <hr>
+
+        <h3>🎁 Redeem Code</h3>
+
+        <input
+            type="text"
+            id="redeemInput"
+            placeholder="Redeem Code डालें"
+        >
+
+        <button class="redeem" onclick="redeemCode()">
+            🔓 Unlock Course
+        </button>
+
+        <p class="small">
+            Demo Codes: SMART001 से SMART010
+        </p>
+
+    </div>
+
+</div>
+
+
+<!-- COURSE -->
+
+<div id="courseScreen" class="container hidden">
+
+    <div class="card">
+
+        <h1>🎓 Smart Course</h1>
+
+        <p>
+            आपका Course सफलतापूर्वक Unlock हो गया है।
+        </p>
+
+        <p>
+            नीचे सभी lessons दिए गए हैं।
+        </p>
+
+    </div>
+
+    <div id="lessons"></div>
+
+</div>
+
+
+<!-- SETTINGS -->
+
+<div id="settingsScreen" class="container hidden">
+
+    <div class="settings">
+
+        <h2>⚙️ Settings</h2>
+
+        <h3>🌐 Language</h3>
+
+        <select id="language">
+
+            <option>Hindi</option>
+            <option>English</option>
+            <option>Marathi</option>
+            <option>Punjabi</option>
+            <option>Chhattisgarhi</option>
+            <option>Bengali</option>
+            <option>Gujarati</option>
+            <option>Assamese</option>
+            <option>Odia</option>
+            <option>Tamil</option>
+            <option>Telugu</option>
+            <option>Kannada</option>
+            <option>Malayalam</option>
+            <option>Urdu</option>
+            <option>Sanskrit</option>
+            <option>Nepali</option>
+
+        </select>
+
+        <button onclick="closeSettings()">
+            ⬅️ वापस Course
+        </button>
+
+    </div>
+
+</div>
+
+
+<script>
+
+/* =========================
+   PAYMENT
+========================= */
+
+function payNow(){
+
+    /*
+    यहां अपना UPI ID डालें।
+    उदाहरण:
+    yourname@upi
+    */
+
+    let upi = "YOUR_UPI_ID@upi";
+
+    /* Course Price = ₹29 */
+    let amount = "29";
+
+    let url =
+        "upi://pay" +
+        "?pa=" + encodeURIComponent(upi) +
+        "&pn=" + encodeURIComponent("Smart Course") +
+        "&am=" + amount +
+        "&cu=INR";
+
+    window.location.href = url;
+}
+
+
+/* =========================
+   REDEEM CODE
+========================= */
+
+function redeemCode(){
+
+    let code =
+        document.getElementById("redeemInput")
+        .value
+        .trim()
+        .toUpperCase();
+
+    let validCodes = [
+
+        "SMART001",
+        "SMART002",
+        "SMART003",
+        "SMART004",
+        "SMART005",
+        "SMART006",
+        "SMART007",
+        "SMART008",
+        "SMART009",
+        "SMART010"
+
+    ];
+
+    if(validCodes.includes(code)){
+
+        localStorage.setItem(
+            "smartCourseUnlocked",
+            "yes"
+        );
+
+        alert("🎉 Course Successfully Unlocked!");
+
+        showCourse();
+
+    }else{
+
+        alert("❌ गलत Redeem Code");
+
+    }
+}
+
+
+/* =========================
+   COURSE CHECK
+========================= */
+
+function checkCourse(){
+
+    let unlocked =
+        localStorage.getItem(
+            "smartCourseUnlocked"
+        );
+
+    if(unlocked === "yes"){
+
+        showCourse();
+
+    }else{
+
+        document
+        .getElementById("lockScreen")
+        .classList.remove("hidden");
+
+        document
+        .getElementById("courseScreen")
+        .classList.add("hidden");
+
+    }
+}
+
+
+/* =========================
+   SHOW COURSE
+========================= */
+
+function showCourse(){
+
+    document
+    .getElementById("lockScreen")
+    .classList.add("hidden");
+
+    document
+    .getElementById("settingsScreen")
+    .classList.add("hidden");
+
+    document
+    .getElementById("courseScreen")
+    .classList.remove("hidden");
+
+}
+
+
+/* =========================
+   SETTINGS
+========================= */
+
+function openSettings(){
+
+    document
+    .getElementById("lockScreen")
+    .classList.add("hidden");
+
+    document
+    .getElementById("courseScreen")
+    .classList.add("hidden");
+
+    document
+    .getElementById("settingsScreen")
+    .classList.remove("hidden");
+
+}
+
+
+function closeSettings(){
+
+    document
+    .getElementById("settingsScreen")
+    .classList.add("hidden");
+
+    checkCourse();
+
+}
+
+
+/* =========================
+   LOGOUT
+========================= */
+
+function logout(){
+
+    localStorage.removeItem(
+        "smartCourseUnlocked"
+    );
+
+    alert("आप Logout हो गए हैं।");
+
+    location.reload();
+
+}
+
+
+/* =========================
+   LESSON DATA
+========================= */
+
+let lessons = [
+
+{
+title:"1. हिंदी परिचय",
+text:`
+नमस्ते! मेरा नाम किशन है।<br>
+मैं एक विद्यार्थी हूँ।<br>
+मैं भारत में रहता हूँ।<br>
+मुझे नई चीजें सीखना पसंद है।
+`
+},
+
+{
+title:"2. English Introduction",
+text:`
+My name is Kisan.<br>
+I am a student.<br>
+I am learning English.<br>
+I live in India.<br>
+I like learning new things.
+`
+},
+
+{
+title:"3. Basic English Words",
+text:`
+What = क्या<br>
+Which = कौन सा<br>
+Where = कहाँ<br>
+When = कब<br>
+Why = क्यों<br>
+Who = कौन<br>
+How = कैसे<br>
+Yes = हाँ<br>
+No = नहीं<br>
+Good = अच्छा
+`
+},
+
+{
+title:"4. भारत की जानकारी",
+text:`
+देश = भारत<br>
+राजधानी = नई दिल्ली<br>
+मुद्रा = भारतीय रुपया<br>
+राष्ट्रीय पशु = ब
+<section style="font-family:Arial,sans-serif;padding:20px;line-height:1.7;">
+
+<h1>🌍 दुनिया की जानकारी — भाग 1</h1>
+<p>यहाँ सामान्य ज्ञान के 50 महत्वपूर्ण प्रश्न और उनके उत्तर दिए गए हैं।</p>
+
+<div style="border:1px solid #ddd;padding:15px;margin:12px 0;border-radius:10px;">
+<h3>1. भारत की राजधानी क्या है?</h3>
+<p>✅ उत्तर: नई दिल्ली</p>
+</div>
+
+<div style="border:1px solid #ddd;padding:15px;margin:12px 0;border-radius:10px;">
+<h3>2. भारत की मुद्रा क्या है?</h3>
+<p>✅ उत्तर: भारतीय रुपया (₹)</p>
+</div>
+
+<div style="border:1px solid #ddd;padding:15px;margin:12px 0;border-radius:10px;">
+<h3>3. भारत किस महाद्वीप में स्थित है?</h3>
+<p>✅ उत्तर: एशिया</p>
+</div>
+
+<div style="border:1px solid #ddd;padding:15px;margin:12px 0;border-radius:10px;">
+<h3>4. भारत का राष्ट्रीय पशु कौन है?</h3>
+<p>✅ उत्तर: बाघ</p>
+</div>
+
+<div style="border:1px solid #ddd;padding:15px;margin:12px 0;border-radius:10px;">
+<h3>5. भारत का राष्ट्रीय पक्षी कौन है?</h3>
+<p>✅ उत्तर: मोर</p>
+</div>
+
+<div style="border:1px solid #ddd;padding:15px;margin:12px 0;border-radius:10px;">
+<h3>6. भारत का राष्ट्रीय फूल कौन-सा है?</h3>
+<p>✅ उत्तर: कमल</p>
+</div>
+
+<div style="border:1px solid #ddd;padding:15px;margin:12px 0;border-radius:10px;">
+<h3>7. भारत का राष्ट्रीय फल कौन-सा है?</h3>
+<p>✅ उत्तर: आम</p>
+</div>
+
+<div style="border:1px solid #ddd;padding:15px;margin:12px 0;border-radius:10px;">
+<h3>8. भारत का राष्ट्रीय वृक्ष कौन-सा है?</h3>
+<p>✅ उत्तर: बरगद</p>
+</div>
+
+<div style="border:1px solid #ddd;padding:15px;margin:12px 0;border-radius:10px;">
+<h3>9. भारत का राष्ट्रीय जलीय जीव कौन है?</h3>
+<p>✅ उत्तर: गंगा नदी डॉल्फिन</p>
+</div>
+
+<div style="border:1px solid #ddd;padding:15px;margin:12px 0;border-radius:10px;">
+<h3>10. भारत का राष्ट्रीय ध्वज क्या कहलाता है?</h3>
+<p>✅ उत्तर: तिरंगा</p>
+</div>
+
+<div style="border:1px solid #ddd;padding:15px;margin:12px 0;border-radius:10px;">
+<h3>11. विश्व का सबसे बड़ा महाद्वीप कौन-सा है?</h3>
+<p>✅ उत्तर: एशिया</p>
+</div>
+
+<div style="border:1px solid #ddd;padding:15px;margin:12px 0;border-radius:10px;">
+<h3>12. विश्व का सबसे छोटा महाद्वीप कौन-सा है?</h3>
+<p>✅ उत्तर: ऑस्ट्रेलिया</p>
+</div>
+
+<div style="border:1px solid #ddd;padding:15px;margin:12px 0;border-radius:10px;">
+<h3>13. विश्व का सबसे बड़ा महासागर कौन-सा है?</h3>
+<p>✅ उत्तर: प्रशांत महासागर</p>
+</div>
+
+<div style="border:1px solid #ddd;padding:15px;margin:12px 0;border-radius:10px;">
+<h3>14. विश्व का सबसे ऊँचा पर्वत कौन-सा है?</h3>
+<p>✅ उत्तर: माउंट एवरेस्ट</p>
+</div>
+
+<div style="border:1px solid #ddd;padding:15px;margin:12px 0;border-radius:10px;">
+<h3>15. माउंट एवरेस्ट किस पर्वत श्रृंखला में है?</h3>
+<p>✅ उत्तर: हिमालय</p>
+</div>
+
+<div style="border:1px solid #ddd;padding:15px;margin:12px 0;border-radius:10px;">
+<h3>16. पृथ्वी का उपग्रह कौन है?</h3>
+<p>✅ उत्तर: चंद्रमा</p>
+</div>
+
+<div style="border:1px solid #ddd;padding:15px;margin:12px 0;border-radius:10px;">
+<h3>17. सूर्य क्या है?</h3>
+<p>✅ उत्तर: एक तारा</p>
+</div>
+
+<div style="border:1px solid #ddd;padding:15px;margin:12px 0;border-radius:10px;">
+<h3>18. पृथ्वी सूर्य की परिक्रमा कितने समय में करती है?</h3>
+<p>✅ उत्तर: लगभग 365 दिन 6 घंटे</p>
+</div>
+
+<div style="border:1px solid #ddd;padding:15px;margin:12px 0;border-radius:10px;">
+<h3>19. पृथ्वी अपने अक्ष पर एक चक्कर लगभग कितने समय में पूरा करती है?</h3>
+<p>✅ उत्तर: लगभग 24 घंटे</p>
+</div>
+
+<div style="border:1px solid #ddd;padding:15px;margin:12px 0;border-radius:10px;">
+<h3>20. सौरमंडल में कितने ग्रह हैं?</h3>
+<p>✅ उत्तर: 8 ग्रह</p>
+</div>
+
+<div style="border:1px solid #ddd;padding:15px;margin:12px 0;border-radius:10px;">
+<h3>21. सूर्य के सबसे निकट कौन-सा ग्रह है?</h3>
+<p>✅ उत्तर: बुध</p>
+</div>
+
+<div style="border:1px solid #ddd;padding:15px;margin:12px 0;border-radius:10px;">
+<h3>22. सौरमंडल का सबसे बड़ा ग्रह कौन-सा है?</h3>
+<p>✅ उत्तर: बृहस्पति</p>
+</div>
+
+<div style="border:1px solid #ddd;padding:15px;margin:12px 0;border-radius:10px;">
+<h3>23. लाल ग्रह किसे कहा जाता है?</h3>
+<p>✅ उत्तर: मंगल</p>
+</div>
+
+<div style="border:1px solid #ddd;padding:15px;margin:12px 0;border-radius:10px;">
+<h3>24. छल्लों वाला प्रसिद्ध ग्रह कौन-सा है?</h3>
+<p>✅ उत्तर: शनि</p>
+</div>
+
+<div style="border:1px solid #ddd;padding:15px;margin:12px 0;border-radius:10px;">
+<h3>25. पृथ्वी पर जीवन के लिए सबसे आवश्यक गैस कौन-सी है?</h3>
+<p>✅ उत्तर: ऑक्सीजन</p>
+</div>
+
+<div style="border:1px solid #ddd;padding:15px;margin:12px 0;border-radius:10px;">
+<h3>26. पौधे प्रकाश संश्लेषण में किस गैस का उपयोग करते हैं?</h3>
+<p>✅ उत्तर: कार्बन डाइऑक्साइड</p>
+</div>
+
+<div style="border:1px solid #ddd;padding:15px;margin:12px 0;border-radius:10px;">
+<h3>27. पानी का रासायनिक सूत्र क्या है?</h3>
+<p>✅ उत्तर: H₂O</p>
+</div>
+
+<div style="border:1px solid #ddd;padding:15px;margin:12px 0;border-radius:10px;">
+<h3>28. ऑक्सीजन का रासायनिक प्रतीक क्या है?</h3>
+<p>✅ उत्तर: O</p>
+</div>
+
+<div style="border:1px solid #ddd;padding:15px;margin:12px 0;border-radius:10px;">
+<h3>29. सोने का रासायनिक प्रतीक क्या है?</h3>
+<p>✅ उत्तर: Au</p>
+</div>
+
+<div style="border:1px solid #ddd;padding:15px;margin:12px 0;border-radius:10px;">
+<h3>30. लोहे का रासायनिक प्रतीक क्या है?</h3>
+<p>✅ उत्तर: Fe</p>
+</div>
+
+<div style="border:1px solid #ddd;padding:15px;margin:12px 0;border-radius:10px;">
+<h3>31. मनुष्य के शरीर में रक्त को पंप करने वाला अंग कौन-सा है?</h3>
+<p>✅ उत्तर: हृदय</p>
+</div>
+
+<div style="border:1px solid #ddd;padding:15px;margin:12px 0;border-radius:10px;">
+<h3>32. मनुष्य किस अंग से साँस लेता है?</h3>
+<p>✅ उत्तर: फेफड़े</p>
+</div>
+
+<div style="border:1px solid #ddd;padding:15px;margin:12px 0;border-radius:10px;">
+<h3>33. मनुष्य के शरीर का सबसे बड़ा अंग कौन-सा है?</h3>
+<p>✅ उत्तर: त्वचा</p>
+</div>
+
+<div style="border:1px solid #ddd;padding:15px;margin:12px 0;border-radius:10px;">
+<h3>34. मनुष्य के शरीर में सामान्यतः कितनी हड्डियाँ होती हैं?</h3>
+<p>✅ उत्तर: 206</p>
+</div>
+
+<div style="border:1px solid #ddd;padding:15px;margin:12px 0;border-radius:10px;">
+<h3>35. रक्त का लाल रंग किस पदार्थ के कारण होता है?</h3>
+<p>✅ उत्तर: हीमोग्लोबिन</p>
+</div>
+
+<div style="border:1px solid #ddd;padding:15px;margin:12px 0;border-radius:10px;">
+<h3>36. कंप्यूटर का मस्तिष्क किसे कहा जाता है?</h3>
+<p>✅ उत्तर: CPU</p>
+</div>
+
+<div style="border:1px solid #ddd;padding:15px;margin:12px 0;border-radius:10px;">
+<h3>37. CPU का पूरा नाम क्या है?</h3>
+<p>✅ उत्तर: Central Processing Unit</p>
+</div>
+
+<div style="border:1px solid #ddd;padding:15px;margin:12px 0;border-radius:10px;">
+<h3>38. WWW का पूरा नाम क्या है?</h3>
+<p>✅ उत्तर: World Wide Web</p>
+</div>
+
+<div style="border:1px solid #ddd;padding:15px;margin:12px 0;border-radius:10px;">
+<h3>39. इंटरनेट का उपयोग किसलिए किया जाता है?</h3>
+<p>✅ उत्तर: जानकारी प्राप्त करने, संचार और ऑनलाइन सेवाओं के लिए</p>
+</div>
+
+<div style="border:1px solid #ddd;padding:15px;margin:12px 0;border-radius:10px;">
+<h3>40. ई-मेल का पूरा नाम क्या है?</h3>
+<p>✅ उत्तर: Electronic Mail</p>
+</div>
+
+<div style="border:1px solid #ddd;padding:15px;margin:12px 0;border-radius:10px;">
+<h3>41. जापान की राजधानी क्या है?</h3>
+<p>✅ उत्तर: टोक्यो</p>
+</div>
+
+<div style="border:1px solid #ddd;padding:15px;margin:12px 0;border-radius:10px;">
+<h3>42. अमेरिका की राजधानी क्या है?</h3>
+<p>✅ उत्तर: वॉशिंगटन, डी.सी.</p>
+</div>
+
+<div style="border:1px solid #ddd;padding:15px;margin:12px 0;border-radius:10px;">
+<h3>43. फ्रांस की राजधानी क्या है?</h3>
+<p>✅ उत्तर: पेरिस</p>
+</div>
+
+<div style="border:1px solid #ddd;padding:15px;margin:12px 0;border-radius:10px;">
+<h3>44. चीन की राजधानी क्या है?</h3>
+<p>✅ उत्तर: बीजिंग</p>
+</div>
+
+<div style="border<section style="font-family:Arial,sans-serif;padding:20px;line-height:1.7;">
+
+<h1>🌍 दुनिया की जानकारी — भाग 2</h1>
+<p>इतिहास, विज्ञान, भूगोल, खेल और विश्व सामान्य ज्ञान के 50 महत्वपूर्ण प्रश्न।</p>
+
+<div style="border:1px solid #ddd;padding:15px;margin:12px 0;border-radius:10px;">
+<h3>51. भारत का राष्ट्रीय पशु कौन है?</h3>
+<p>✅ उत्तर: बाघ</p>
+</div>
+
+<div style="border:1px solid #ddd;padding:15px;margin:12px 0;border-radius:10px;">
+<h3>52. भारत का राष्ट्रीय पक्षी कौन है?</h3>
+<p>✅ उत्तर: मोर</p>
+</div>
+
+<div style="border:1px solid #ddd;padding:15px;margin:12px 0;border-radius:10px;">
+<h3>53. भारत का राष्ट्रीय फूल कौन-सा है?</h3>
+<p>✅ उत्तर: कमल</p>
+</div>
+
+<div style="border:1px solid #ddd;padding:15px;margin:12px 0;border-radius:10px;">
+<h3>54. भारत का राष्ट्रीय वृक्ष कौन-सा है?</h3>
+<p>✅ उत्तर: बरगद</p>
+</div>
+
+<div style="border:1px solid #ddd;padding:15px;margin:12px 0;border-radius:10px;">
+<h3>55. भारत का राष्ट्रीय फल कौन-सा है?</h3>
+<p>✅ उत्तर: आम</p>
+</div>
+
+<div style="border:1px solid #ddd;padding:15px;margin:12px 0;border-radius:10px;">
+<h3>56. भारत का राष्ट्रीय गीत कौन-सा है?</h3>
+<p>✅ उत्तर: वंदे मातरम्</p>
+</div>
+
+<div style="border:1px solid #ddd;padding:15px;margin:12px 0;border-radius:10px;">
+<h3>57. भारत का राष्ट्रगान कौन-सा है?</h3>
+<p>✅ उत्तर: जन गण मन</p>
+</div>
+
+<div style="border:1px solid #ddd;padding:15px;margin:12px 0;border-radius:10px;">
+<h3>58. भारत का संविधान कब लागू हुआ?</h3>
+<p>✅ उत्तर: 26 जनवरी 1950</p>
+</div>
+
+<div style="border:1px solid #ddd;padding:15px;margin:12px 0;border-radius:10px;">
+<h3>59. भारत का स्वतंत्रता दिवस कब मनाया जाता है?</h3>
+<p>✅ उत्तर: 15 अगस्त</p>
+</div>
+
+<div style="border:1px solid #ddd;padding:15px;margin:12px 0;border-radius:10px;">
+<h3>60. भारत का गणतंत्र दिवस कब मनाया जाता है?</h3>
+<p>✅ उत्तर: 26 जनवरी</p>
+</div>
+
+<div style="border:1px solid #ddd;padding:15px;margin:12px 0;border-radius:10px;">
+<h3>61. भारत को स्वतंत्रता किस वर्ष मिली?</h3>
+<p>✅ उत्तर: 1947</p>
+</div>
+
+<div style="border:1px solid #ddd;padding:15px;margin:12px 0;border-radius:10px;">
+<h3>62. भारत के पहले प्रधानमंत्री कौन थे?</h3>
+<p>✅ उत्तर: जवाहरलाल नेहरू</p>
+</div>
+
+<div style="border:1px solid #ddd;padding:15px;margin:12px 0;border-radius:10px;">
+<h3>63. भारत के पहले राष्ट्रपति कौन थे?</h3>
+<p>✅ उत्तर: डॉ. राजेंद्र प्रसाद</p>
+</div>
+
+<div style="border:1px solid #ddd;padding:15px;margin:12px 0;border-radius:10px;">
+<h3>64. भारतीय संविधान की प्रारूप समिति के अध्यक्ष कौन थे?</h3>
+<p>✅ उत्तर: डॉ. भीमराव आंबेडकर</p>
+</div>
+
+<div style="border:1px solid #ddd;padding:15px;margin:12px 0;border-radius:10px;">
+<h3>65. महात्मा गांधी का पूरा नाम क्या था?</h3>
+<p>✅ उत्तर: मोहनदास करमचंद गांधी</p>
+</div>
+
+<div style="border:1px solid #ddd;padding:15px;margin:12px 0;border-radius:10px;">
+<h3>66. महात्मा गांधी का जन्म कब हुआ था?</h3>
+<p>✅ उत्तर: 2 अक्टूबर 1869</p>
+</div>
+
+<div style="border:1px solid #ddd;padding:15px;margin:12px 0;border-radius:10px;">
+<h3>67. शिक्षक दिवस भारत में कब मनाया जाता है?</h3>
+<p>✅ उत्तर: 5 सितंबर</p>
+</div>
+
+<div style="border:1px solid #ddd;padding:15px;margin:12px 0;border-radius:10px;">
+<h3>68. बाल दिवस भारत में कब मनाया जाता है?</h3>
+<p>✅ उत्तर: 14 नवंबर</p>
+</div>
+
+<div style="border:1px solid #ddd;padding:15px;margin:12px 0;border-radius:10px;">
+<h3>69. विश्व पर्यावरण दिवस कब मनाया जाता है?</h3>
+<p>✅ उत्तर: 5 जून</p>
+</div>
+
+<div style="border:1px solid #ddd;padding:15px;margin:12px 0;border-radius:10px;">
+<h3>70. अंतरराष्ट्रीय योग दिवस कब मनाया जाता है?</h3>
+<p>✅ उत्तर: 21 जून</p>
+</div>
+
+<div style="border:1px solid #ddd;padding:15px;margin:12px 0;border-radius:10px;">
+<h3>71. पृथ्वी का एकमात्र प्राकृतिक उपग्रह कौन है?</h3>
+<p>✅ उत्तर: चंद्रमा</p>
+</div>
+
+<div style="border:1px solid #ddd;padding:15px;margin:12px 0;border-radius:10px;">
+<h3>72. सूर्य के सबसे निकट ग्रह कौन-सा है?</h3>
+<p>✅ उत्तर: बुध</p>
+</div>
+
+<div style="border:1px solid #ddd;padding:15px;margin:12px 0;border-radius:10px;">
+<h3>73. पृथ्वी का सबसे गर्म ग्रह कौन-सा है?</h3>
+<p>✅ उत्तर: शुक्र</p>
+</div>
+
+<div style="border:1px solid #ddd;padding:15px;margin:12px 0;border-radius:10px;">
+<h3>74. लाल ग्रह किसे कहा जाता है?</h3>
+<p>✅ उत्तर: मंगल</p>
+</div>
+
+<div style="border:1px solid #ddd;padding:15px;margin:12px 0;border-radius:10px;">
+<h3>75. सौरमंडल का सबसे बड़ा ग्रह कौन-सा है?</h3>
+<p>✅ उत्तर: बृहस्पति</p>
+</div>
+
+<div style="border:1px solid #ddd;padding:15px;margin:12px 0;border-radius:10px;">
+<h3>76. सौरमंडल का सबसे बड़ा छल्ला-प्रणाली वाला ग्रह कौन-सा है?</h3>
+<p>✅ उत्तर: शनि</p>
+</div>
+
+<div style="border:1px solid #ddd;padding:15px;margin:12px 0;border-radius:10px;">
+<h3>77. पृथ्वी का आकार कैसा है?</h3>
+<p>✅ उत्तर: लगभग गोलाकार</p>
+</div>
+
+<div style="border:1px solid #ddd;padding:15px;margin:12px 0;border-radius:10px;">
+<h3>78. वायुमंडल में सबसे अधिक कौन-सी गैस है?</h3>
+<p>✅ उत्तर: नाइट्रोजन</p>
+</div>
+
+<div style="border:1px solid #ddd;padding:15px;margin:12px 0;border-radius:10px;">
+<h3>79. मनुष्य साँस लेते समय मुख्य रूप से किस गैस का उपयोग करता है?</h3>
+<p>✅ उत्तर: ऑक्सीजन</p>
+</div>
+
+<div style="border:1px solid #ddd;padding:15px;margin:12px 0;border-radius:10px;">
+<h3>80. पौधे भोजन बनाने की प्रक्रिया को क्या कहते हैं?</h3>
+<p>✅ उत्तर: प्रकाश संश्लेषण</p>
+</div>
+
+<div style="border:1px solid #ddd;padding:15px;margin:12px 0;border-radius:10px;">
+<h3>81. पानी का रासायनिक सूत्र क्या है?</h3>
+<p>✅ उत्तर: H₂O</p>
+</div>
+
+<div style="border:1px solid #ddd;padding:15px;margin:12px 0;border-radius:10px;">
+<h3>82. कार्बन डाइऑक्साइड का रासायनिक सूत्र क्या है?</h3>
+<p>✅ उत्तर: CO₂</p>
+</div>
+
+<div style="border:1px solid #ddd;padding:15px;margin:12px 0;border-radius:10px;">
+<h3>83. ऑक्सीजन का रासायनिक प्रतीक क्या है?</h3>
+<p>✅ उत्तर: O</p>
+</div>
+
+<div style="border:1px solid #ddd;padding:15px;margin:12px 0;border-radius:10px;">
+<h3>84. सोने का रासायनिक प्रतीक क्या है?</h3>
+<p>✅ उत्तर: Au</p>
+</div>
+
+<div style="border:1px solid #ddd;padding:15px;margin:12px 0;border-radius:10px;">
+<h3>85. चाँदी का रासायनिक प्रतीक क्या है

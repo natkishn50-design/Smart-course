@@ -1,0 +1,1412 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Smart Course</title>
+
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,sans-serif;background:#f2f5f9;color:#222}
+header{background:linear-gradient(135deg,#1565c0,#42a5f5);color:white;padding:20px;text-align:center}
+header h1{margin:0;font-size:28px}
+.container{max-width:900px;margin:auto;padding:15px}
+.card{background:white;border-radius:15px;padding:18px;margin-bottom:15px;box-shadow:0 3px 12px rgba(0,0,0,.10)}
+h2{color:#1565c0}
+h3{color:#333}
+button{border:0;border-radius:10px;padding:13px 18px;font-size:16px;margin:5px;cursor:pointer}
+.pay{background:#1565c0;color:white}
+.redeem{background:#2e7d32;color:white}
+.logout{background:#d32f2f;color:white}
+.settings{background:#424242;color:white}
+.back{background:#555;color:white}
+input,select{width:100%;padding:13px;border:1px solid #bbb;border-radius:9px;font-size:16px;margin:7px 0}
+.hidden{display:none}
+.lesson{background:#f8fbff;border-left:5px solid #1976d2;padding:13px;margin:10px 0;border-radius:8px}
+.notice{background:#fff3cd;border-left:5px solid #ffb300;padding:12px;border-radius:8px}
+.success{color:green;font-weight:bold}
+.error{color:red;font-weight:bold}
+.price{font-size:30px;font-weight:bold;color:#1565c0}
+table{width:100%;border-collapse:collapse}
+th,td{border:1px solid #bbb;padding:8px}
+th{background:#e3f2fd}
+footer{text-align:center;padding:25px;color:#666}
+.small{font-size:14px;color:#666}
+</style>
+</head>
+
+<body>
+
+<header>
+<h1>📚 Smart Course</h1>
+<p>सीखें • आगे बढ़ें • सुरक्षित रहें</p>
+
+<button class="settings" onclick="openSettings()">⚙️ Settings</button>
+<button class="logout" onclick="logout()">🚪 Logout</button>
+</header>
+
+
+<div class="container">
+
+<!-- LOGIN / LOCK SCREEN -->
+
+<div id="lockScreen" class="card">
+
+<h2>🔒 Smart Course Locked</h2>
+
+<p>
+Smart Course में प्रवेश करने के लिए पहले Course खरीदें
+या अपना Redeem Code डालें।
+</p>
+
+<div class="notice">
+<b>महत्वपूर्ण:</b><br>
+यह एक single HTML version है। Payment button UPI/PhonePe
+को खोलने का प्रयास करेगा। असली payment verification और
+automatic unlock के लिए सुरक्षित backend/payment gateway जरूरी है।
+</div>
+
+<h3>💰 Course Price</h3>
+
+<div class="price">₹99</div>
+
+<button class="pay" onclick="payNow()">
+💳 PhonePe / UPI से Payment
+</button>
+
+<hr>
+
+<h3>🔑 Redeem Code</h3>
+
+<input id="redeemInput"
+placeholder="Redeem Code यहाँ लिखें">
+
+<button class="redeem" onclick="redeemCode()">
+🔓 Course Unlock करें
+</button>
+
+<p id="redeemMessage"></p>
+
+<p class="small">
+Demo Codes: SMART001 से SMART010
+</p>
+
+</div>
+
+
+<!-- SETTINGS -->
+
+<div id="settingsScreen" class="card hidden">
+
+<h2>⚙️ Settings</h2>
+
+<label>🌐 Language / भाषा</label>
+
+<select id="language" onchange="saveLanguage()">
+<option>हिंदी</option>
+<option>English</option>
+<option>मराठी</option>
+<option>पंजाबी</option>
+<option>छत्तीसगढ़ी</option>
+<option>বাংলা</option>
+<option>ગુજરાતી</option>
+<option>অসমীয়া</option>
+<option>ଓଡ଼ିଆ</option>
+<option>தமிழ்</option>
+<option>తెలుగు</option>
+<option>ಕನ್ನಡ</option>
+<option>മലയാളം</option>
+<option>اردو</option>
+<option>संस्कृत</option>
+<option>नेपाली</option>
+</select>
+
+<br>
+
+<button class="back" onclick="closeSettings()">
+⬅️ वापस जाएँ
+</button>
+
+</div>
+
+
+<!-- COURSE -->
+
+<div id="courseScreen" class="hidden">
+
+<div class="card">
+<h2>🎓 Smart Course Unlocked</h2>
+<p>स्वागत है! अब आप पूरा Course पढ़ सकते हैं।</p>
+</div>
+
+
+<!-- 1 -->
+
+<div class="card">
+<h2>📖 Lesson 1 — हिंदी परिचय</h2>
+
+<div class="lesson">
+मेरा नाम किशन है।<br>
+मैं एक विद्यार्थी हूँ।<br>
+मैं भारत में रहता हूँ।<br>
+मैं अंग्रेजी सीख रहा हूँ।<br>
+मुझे नई चीजें सीखना पसंद है।
+</div>
+</div>
+
+
+<!-- 2 -->
+
+<div class="card">
+<h2>🇬🇧 Lesson 2 — English Introduction</h2>
+
+<div class="lesson">
+My name is Kisan.<br>
+मेरा नाम किशन है।
+<br><br>
+I am a student.<br>
+मैं एक विद्यार्थी हूँ।
+<br><br>
+I live in India.<br>
+मैं भारत में रहता हूँ।
+<br><br>
+I am learning English.<br>
+मैं अंग्रेजी सीख रहा हूँ।
+<br><br>
+I like learning new things.<br>
+मुझे नई चीजें सीखना पसंद है।
+<br><br>
+Nice to meet you.<br>
+आपसे मिलकर खुशी हुई।
+</div>
+</div>
+
+
+<!-- 3 -->
+
+<div class="card">
+<h2>🗣️ Lesson 3 — Basic English Words</h2>
+
+<table>
+<tr><th>English</th><th>हिंदी</th></tr>
+<tr><td>What</td><td>क्या</td></tr>
+<tr><td>Which</td><td>कौन सा / कौन सी</td></tr>
+<tr><td>Who</td><td>कौन</td></tr>
+<tr><td>Where</td><td>कहाँ</td></tr>
+<tr><td>When</td><td>कब</td></tr>
+<tr><td>Why</td><td>क्यों</td></tr>
+<tr><td>How</td><td>कैसे</td></tr>
+<tr><td>Yes</td><td>हाँ</td></tr>
+<tr><td>No</td><td>नहीं</td></tr>
+<tr><td>Good</td><td>अच्छा</td></tr>
+<tr><td>Bad</td><td>बुरा</td></tr>
+<tr><td>Thank You</td><td>धन्यवाद</td></tr>
+</table>
+</div>
+
+
+<!-- 4 -->
+
+<div class="card">
+<h2>🇮🇳 Lesson 4 — भारत की जानकारी</h2>
+
+<div class="lesson">
+<b>देश:</b> भारत — India<br><br>
+<b>राजधानी:</b> नई दिल्ली — New Delhi<br><br>
+<b>मुद्रा:</b> भारतीय रुपया — Indian Rupee<br><br>
+<b>राष्ट्रीय पशु:</b> बाघ — Tiger<br><br>
+<b>राष्ट्रीय पक्षी:</b> मोर — Peacock<br><br>
+<b>राष्ट्रीय फूल:</b> कमल — Lotus<br><br>
+<b>राष्ट्रीय वृक्ष:</b> बरगद — Banyan Tree
+</div>
+
+<p class="small">
+जनसंख्या जैसे बदलने वाले आँकड़ों को समय-समय पर सरकारी स्रोत से जाँचना चाहिए।
+</p>
+</div>
+
+
+<!-- 5 -->
+
+<div class="card">
+<h2>🗺️ Lesson 5 — भारत के राज्य और राजधानी</h2>
+
+<table>
+<tr><th>राज्य</th><th>राजधानी</th></tr>
+<tr><td>आंध्र प्रदेश</td><td>अमरावती</td></tr>
+<tr><td>अरुणाचल प्रदेश</td><td>ईटानगर</td></tr>
+<tr><td>असम</td><td>दिसपुर</td></tr>
+<tr><td>बिहार</td><td>पटना</td></tr>
+<tr><td>छत्तीसगढ़</td><td>रायपुर</td></tr>
+<tr><td>गोवा</td><td>पणजी</td></tr>
+<tr><td>गुजरात</td><td>गांधीनगर</td></tr>
+<tr><td>हरियाणा</td><td>चंडीगढ़</td></tr>
+<tr><td>हिमाचल प्रदेश</td><td>शिमला</td></tr>
+<tr><td>झारखंड</td><td>रांची</td></tr>
+<tr><td>कर्नाटक</td><td>बेंगलुरु</td></tr>
+<tr><td>केरल</td><td>तिरुवनंतपुरम</td></tr>
+<tr><td>मध्य प्रदेश</td><td>भोपाल</td></tr>
+<tr><td>महाराष्ट्र</td><td>मुंबई</td></tr>
+<tr><td>मणिपुर</td><td>इंफाल</td></tr>
+<tr><td>मेघालय</td><td>शिलांग</td></tr>
+<tr><td>मिजोरम</td><td>आइजोल</td></tr>
+<tr><td>नागालैंड</td><td>कोहिमा</td></tr>
+<tr><td>ओडिशा</td><td>भुवनेश्वर</td></tr>
+<tr><td>पंजाब</td><td>चंडीगढ़</td></tr>
+<tr><td>राजस्थान</td><td>जयपुर</td></tr>
+<tr><td>सिक्किम</td><td>गंगटोक</td></tr>
+<tr><td>तमिलनाडु</td><td>चेन्नई</td></tr>
+<tr><td>तेलंगाना</td><td>हैदराबाद</td></tr>
+<tr><td>त्रिपुरा</td><td>अगरतला</td></tr>
+<tr><td>उत्तर प्रदेश</td><td>लखनऊ</td></tr>
+<tr><td>उत्तराखंड</td><td>देहरादून</td></tr>
+<tr><td>पश्चिम बंगाल</td><td>कोलकाता</td></tr>
+</table>
+</div>
+
+
+<!-- 6 -->
+
+<div class="card">
+<h2>🌍 Lesson 6 — 10 Countries</h2>
+
+<table>
+<tr><th>हिंदी</th><th>English</th></tr>
+<tr><td>भारत</td><td>India</td></tr>
+<tr><td>नेपाल</td><td>Nepal</td></tr>
+<tr><td>भूटान</td><td>Bhutan</td></tr>
+<tr><td>बांग्लादेश</td><td>Bangladesh</td></tr>
+<tr><td>श्रीलंका</td><td>Sri Lanka</td></tr>
+<tr><td>चीन</td><td>China</td></tr>
+<tr><td>जापान</td><td>Japan</td></tr>
+<tr><td>अमेरिका</td><td>USA</td></tr>
+<tr><td>यूनाइटेड किंगडम</td><td>United Kingdom</td></tr>
+<tr><td>ऑस्ट्रेलिया</td><td>Australia</td></tr>
+</table>
+</div>
+
+
+<!-- 7 -->
+
+<div class="card">
+<h2>🐦 Lesson 7 — 5 Birds</h2>
+
+<div class="lesson">
+मोर — Peacock<br>
+तोता — Parrot<br>
+कबूतर — Pigeon<br>
+कौआ — Crow<br>
+गौरैया — Sparrow
+</div>
+</div>
+
+
+<!-- 8 -->
+
+<div class="card">
+<h2>🐟 Lesson 8 — 5 Fish</h2>
+
+<div class="lesson">
+रोहू — Rohu<br>
+कतला — Catla<br>
+मृगल — Mrigal<br>
+सिंघी — Singhi<br>
+मांगुर — Magur
+</div>
+</div>
+
+
+<!-- 9 -->
+
+<div class="card">
+<h2>🌈 Lesson 9 — 7 Colors</h2>
+
+<div class="lesson">
+लाल — Red<br>
+नीला — Blue<br>
+हरा — Green<br>
+पीला — Yellow<br>
+काला — Black<br>
+सफेद — White<br>
+नारंगी — Orange
+</div>
+</div>
+
+
+<!-- 10 -->
+
+<div class="card">
+<h2>🌸 Lesson 10 — 10 Flowers</h2>
+
+<div class="lesson">
+गुलाब — Rose<br>
+कमल — Lotus<br>
+गेंदा — Marigold<br>
+चमेली — Jasmine<br>
+गुड़हल — Hibiscus<br>
+सूरजमुखी — Sunflower<br>
+चंपा — Champa<br>
+रजनीगंधा — Tuberose<br>
+मोगरा — Arabian Jasmine<br>
+कनेर — Oleander
+</div>
+</div>
+
+
+<!-- 11 -->
+
+<div class="card">
+<h2>🧍 Lesson 11 — Body Parts</h2>
+
+<table>
+<tr><th>हिंदी</th><th>English</th></tr>
+<tr><td>सिर</td><td>Head</td></tr>
+<tr><td>बाल</td><td>Hair</td></tr>
+<tr><td>आँख</td><td>Eye</td></tr>
+<tr><td>कान</td><td>Ear</td></tr>
+<tr><td>नाक</td><td>Nose</td></tr>
+<tr><td>मुँह</td><td>Mouth</td></tr>
+<tr><td>दाँत</td><td>Teeth</td></tr>
+<tr><td>गर्दन</td><td>Neck</td></tr>
+<tr><td>हाथ</td><td>Hand</td></tr>
+<tr><td>उंगली</td><td>Finger</td></tr>
+<tr><td>पैर</td><td>Leg</td></tr>
+<tr><td>पाँव</td><td>Foot</td></tr>
+</table>
+</div>
+
+
+<!-- 12 -->
+
+<div class="card">
+<h2>🔢 Lesson 12 — 1 से 20 तक पहाड़े</h2>
+<div id="tables"></div>
+</div>
+
+
+<!-- 13 -->
+
+<div class="card">
+<h2>💰 Lesson 13 — Money Skills</h2>
+
+<div class="lesson">
+₹10 = दस रुपये<br>
+₹20 = बीस रुपये<br>
+₹50 = पचास रुपये<br>
+₹100 = सौ रुपये<br>
+₹200 = दो सौ रुपये<br>
+₹500 = पाँच सौ रुपये
+</div>
+
+<p>
+पैसे लेते और देते समय रकम को ध्यान से गिनें।
+</p>
+</div>
+
+
+<!-- 14 -->
+
+<div class="card">
+<h2>📱 Lesson 14 — UPI Safety</h2>
+
+<ul>
+<li>UPI PIN किसी को न बताएं।</li>
+<li>OTP किसी को न बताएं।</li>
+<li>Payment से पहले Receiver का नाम देखें।</li>
+<li>अनजान QR को बिना समझे Scan न करें।</li>
+<li>फोन पर PIN माँगने वाले व्यक्ति से सावधान रहें।</li>
+</ul>
+</div>
+
+
+<!-- 15 -->
+
+<div class="card">
+<h2>🏦 Lesson 15 — Bank Basic</h2>
+
+<p>
+Bank में पैसे जमा करना, निकालना और Account से जुड़ी
+Basic Banking Services समझना जरूरी है।
+</p>
+
+<p>
+अपना ATM PIN, OTP और Password किसी को न बताएं।
+</p>
+</div>
+
+
+<!-- 16 -->
+
+<div class="card">
+<h2>💳 Lesson 16 — ATM</h2>
+
+<ol>
+<li>ATM में Card डालें।</li>
+<li>भाषा चुनें।</li>
+<li>PIN डालें और छुपाकर डालें।</li>
+<li>Cash Withdrawal चुनें।</li>
+<li>रकम डालें।</li>
+<li>Cash और Card लेना न भूलें।</li>
+</ol>
+</div>
+
+
+<!-- 17 -->
+
+<div class="card">
+<h2>📱 Lesson 17 — Mobile Skills</h2>
+
+<ul>
+<li>Wi-Fi चालू/बंद करना</li>
+<li>Mobile Data चालू करना</li>
+<li>Bluetooth इस्तेमाल करना</li>
+<li>Screenshot लेना</li>
+<li>Photo भेजना</li>
+<li>Contact Save करना</li>
+<li>App Install करना</li>
+<li>App Uninstall करना</li>
+<li>Storage खाली करना</li>
+</ul>
+</div>
+
+
+<!-- 18 -->
+
+<div class="card">
+<h2>🗺️ Lesson 18 — Google Maps</h2>
+
+<p>
+Google Maps जैसे Map App से किसी जगह का रास्ता देखा जा सकता है।
+</p>
+
+<p>
+रास्ता समझ न आए तो किसी भरोसेमंद व्यक्ति से मदद लें।
+</p>
+</div>
+
+
+<!-- 19 -->
+
+<div class="card">
+<h2>🚌 Lesson 19 — Bus और Auto</h2>
+
+<ul>
+<li>Destination पहले पूछें।</li>
+<li>किराया पूछें।</li>
+<li>Bus का नंबर देखें।</li>
+<li>सामान सुरक्षित रखें।</li>
+</ul>
+</div>
+
+
+<!-- 20 -->
+
+<div class="card">
+<h2>🛒 Lesson 20 — Shopping</h2>
+
+<p>
+सामान खरीदते समय कीमत, मात्रा और बाकी पैसे जाँचें।
+</p>
+
+<div class="lesson">
+उदाहरण:<br>
+₹100 दिए।<br>
+सामान ₹65 का है।<br>
+बाकी = ₹35
+</div>
+</div>
+
+
+<!-- 21 -->
+
+<div class="card">
+<h2>📄 Lesson 21 — Documents Safety</h2>
+
+<ul>
+<li>जरूरी Documents सुरक्षित रखें।</li>
+<li>OTP Share न करें।</li>
+<li>Password Share न करें।</li>
+<li>अनजान Website पर Documents Upload न करें।</li>
+<li>Original Document अनजान व्यक्ति को न दें।</li>
+</ul>
+</div>
+
+
+<!-- 22 -->
+
+<div class="card">
+<h2>🛡️ Lesson 22 — Online Fraud Safety</h2>
+
+<div class="lesson">
+Lottery जीतने का Fake Message<br>
+Fake KYC Call<br>
+OTP माँगना<br>
+UPI PIN माँगना<br>
+अनजान Link<br>
+पहले पैसे भेजने का दबाव
+</div>
+
+<p>
+ऐसी स्थिति में जल्दबाजी में Payment न करें।
+</p>
+</div>
+
+
+<!-- 23 -->
+
+<div class="card">
+<h2>💬 Lesson 23 — WhatsApp</h2>
+
+<p>
+Message भेजना<br>
+Photo भेजना<br>
+Document भेजना<br>
+Voice Message भेजना<br>
+Video Call करना<br>
+Contact Block करना
+</p>
+</div>
+
+
+<!-- 24 -->
+
+<div class="card">
+<h2>💼 Lesson 24 — Job Safety</h2>
+
+<ul>
+<li>Job के नाम पर बड़ी रकम न दें।</li>
+<li>Company की जानकारी जाँचें।</li>
+<li>OTP/PIN न दें।</li>
+<li>Documents सुरक्षित रखें।</li>
+<li>अनजान व्यक्ति को निजी जानकारी न दें।</li>
+</ul>
+</div>
+
+
+<!-- 25 -->
+
+<div class="card">
+<h2>🏙️ Lesson 25 — City Life</h2>
+
+<p>
+शहर में रहने के लिए रास्ता पूछना,
+Bus/Auto समझना, Shopping करना,
+Mobile चलाना, Bank/ATM समझना,
+UPI का सुरक्षित उपयोग करना,
+Basic English बोलना और Emergency में
+मदद माँगना सीखना उपयोगी है।
+</p>
+</div>
+
+
+<!-- 26 -->
+
+<div class="card">
+<h2>📞 Lesson 26 — Phone Conversation</h2>
+
+<div class="lesson">
+Hello. — नमस्ते।<br><br>
+Who are you? — आप कौन हैं?<br><br>
+Where are you? — आप कहाँ हैं?<br><br>
+Please speak slowly. — कृपया धीरे बोलिए।<br><br>
+I don't understand. — मुझे समझ नहीं आया।<br><br>
+Thank you. — धन्यवाद।
+</div>
+</div>
+
+
+<!-- 27 -->
+
+<div class="card">
+<h2>🪔 Lesson 27 — Diwali Essay</h2>
+
+<p>
+दीपावली भारत का प्रसिद्ध त्योहार है।
+इसे रोशनी का त्योहार भी कहा जाता है।
+इस दिन लोग अपने घरों की सफाई करते हैं।
+घर को दीपक और रोशनी से सजाते हैं।
+लोग एक-दूसरे को मिठाई और शुभकामनाएँ देते हैं।
+हमें दीपावली सुरक्षित तरीके से मनानी चाहिए।
+</p>
+</div>
+
+
+<!-- 28 -->
+
+<div class="card">
+<h2>🐄 Lesson 28 — Cow Essay</h2>
+
+<p>
+गाय एक उपयोगी घरेलू पशु है।
+गाय हमें दूध देती है।
+दूध से दही, घी और मक्खन बनाए जाते हैं।
+गाय शांत स्वभाव की होती है।
+हमें पशुओं के साथ दयालु व्यवहार करना चाहिए।
+</p>
+</div>
+
+
+<!-- 29 -->
+
+<div class="card">
+<h2>🏹 Lesson 29 — Dussehra Essay</h2>
+
+<p>
+दशहरा भारत का प्रसिद्ध त्योहार है।
+यह अच्छाई की बुराई पर जीत का प्रतीक माना जाता है।
+इस दिन कई स्थानों पर रामलीला और अन्य कार्यक्रम होते हैं।
+लोग इस त्योहार को खुशी और उत्साह के साथ मनाते हैं।
+हमें हमेशा सत्य और अच्छाई का साथ देना चाहिए।
+</p>
+</div>
+
+
+<!-- 30 -->
+
+<div class="card">
+<h2>📝 Lesson 30 — Final Revision</h2>
+
+<div class="lesson">
+<b>प्रश्न:</b> भारत की राजधानी क्या है?<br>
+<b>उत्तर:</b> नई दिल्ली।
+</div>
+
+<div class="lesson">
+<b>प्रश्न:</b> UPI PIN किसे बताना चाहिए?<br>
+<b>उत्तर:</b> किसी को नहीं।
+</div>
+
+<div class="lesson">
+<b>प्रश्न:</b> My name is Kisan का अर्थ?<br>
+<b>उत्तर:</b> मेरा नाम किशन है।
+</div>
+
+<div class="lesson">
+<b>प्रश्न:</b> Online Fraud से कैसे बचें?<br>
+<b>उत्तर:</b> OTP, PIN और Password किसी को न बताएं।
+</div>
+
+</div>
+
+
+<div class="card">
+<h2>🎉 Course Complete</h2>
+
+<p>
+आपने Smart Course पूरा कर लिया है।
+अब इन सभी Lessons का Revision कर सकते हैं।
+</p>
+</div>
+
+</div>
+
+
+<footer>
+<p>📚 Smart Course</p>
+<p>Learning • Skills • Safety • Basic Knowledge</p>
+</footer>
+
+
+<script>
+
+/* =========================
+   PAYMENT
+   ========================= */
+
+function payNow(){
+
+/*
+अपनी UPI ID यहाँ डालें।
+उदाहरण:
+yourname@upi
+
+ध्यान:
+यह केवल UPI Payment App खोलता है।
+Payment की automatic verification नहीं करता।
+*/
+
+let upi="YOUR_UPI_ID@upi";
+
+let amount="99";
+
+let url=
+"upi://pay?pa="+
+encodeURIComponent(upi)+
+"&pn="+
+encodeURIComponent("Smart Course")+
+"&am="+
+amount+
+"&cu=INR";
+
+window.location.href=url;
+
+}
+
+
+/* =========================
+   REDEEM
+   ========================= */
+
+function redeemCode(){
+
+let code=
+document.getElementById(
+"redeemInput"
+).value.trim().toUpperCase();
+
+let codes=[
+"SMART001",
+"SMART002",
+"SMART003",
+"SMART004",
+"SMART005",
+"SMART006",
+"SMART007",
+"SMART008",
+"SMART009",
+"SMART010"
+];
+
+if(codes.includes(code)){
+
+localStorage.setItem(
+"smartCourseUnlocked",
+"yes"
+);
+
+document.getElementById(
+"redeemMessage"
+).innerHTML=
+"<span class='success'>✅ Course Successfully Unlocked!</span>";
+
+showCourse();
+
+}else{
+
+document.getElementById(
+"redeemMessage"
+).innerHTML=
+"<span class='error'>❌ गलत Redeem Code</span>";
+
+}
+
+}
+
+
+/* =========================
+   SHOW COURSE
+   ========================= */
+
+function showCourse(){
+
+document.getElementById(
+"lockScreen"
+).classList.add("hidden");
+
+document.getElementById(
+"settingsScreen"
+).classList.add("hidden");
+
+document.getElementById(
+"courseScreen"
+).classList.remove("hidden");
+
+}
+
+
+/* =========================
+   CHECK UNLOCK
+   ========================= */
+
+function checkCourse(){
+
+let unlocked=
+localStorage.getItem(
+"smartCourseUnlocked"
+);
+
+if(unlocked==="yes"){
+
+showCourse();
+
+}
+
+}
+
+
+/* =========================
+   SETTINGS
+   ========================= */
+
+function openSettings(){
+
+document.getElementById(
+"lockScreen"
+).classList.add("hidden");
+
+document.getElementById(
+"courseScreen"
+).classList.add("hidden");
+
+document.getElementById(
+"settingsScreen"
+).classList.remove("hidden");
+
+}
+
+
+function closeSettings(){
+
+document.getElementById(
+"settingsScreen"
+).classList.add("hidden");
+
+checkCourse();
+
+}
+
+
+function saveLanguage(){
+
+let language=
+document.getElementById(
+"language"
+).value;
+
+localStorage.setItem(
+"smartCourseLanguage",
+language
+);
+
+alert(
+"Language Saved: "+language
+);
+
+}
+
+
+/* =========================
+   LOGOUT
+   ========================= */
+
+function logout(){
+
+localStorage.removeItem(
+"smartCourseUnlocked"
+);
+
+location.reload();
+
+}
+
+
+/* =========================
+   TABLES 1-20
+   ========================= */
+
+function createTables(){
+
+let html="";
+
+for(let n=1;n<=20;n++){
+
+html+="<div class='lesson'>";
+
+html+="<h3>"+n+" का पहाड़ा</h3>";
+
+for(let i=1;i<=10;i++){
+
+html+=
+n+" × "+i+
+" = "+(n*i)+
+"<br>";
+
+}
+
+html+="</div>";
+
+}
+
+document.getElementById(
+"tables"
+).innerHTML=html;
+
+}
+
+
+/* =========================
+   START
+   ========================= */
+
+createTables();
+
+checkCourse();
+
+</script>
+
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Smart Course</title>
+
+<style>
+*{
+    box-sizing:border-box;
+}
+
+body{
+    margin:0;
+    font-family:Arial,sans-serif;
+    background:#f4f6f8;
+    color:#222;
+}
+
+header{
+    background:#1565c0;
+    color:white;
+    padding:16px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+header h2{
+    margin:0;
+}
+
+button{
+    border:0;
+    border-radius:8px;
+    padding:12px 16px;
+    font-size:15px;
+    cursor:pointer;
+}
+
+.container{
+    padding:18px;
+    max-width:700px;
+    margin:auto;
+}
+
+.card{
+    background:white;
+    padding:20px;
+    border-radius:15px;
+    margin-bottom:15px;
+    box-shadow:0 2px 10px rgba(0,0,0,.08);
+}
+
+.price{
+    font-size:35px;
+    font-weight:bold;
+    color:#1565c0;
+    text-align:center;
+    margin:15px;
+}
+
+.pay{
+    width:100%;
+    background:#1b5e20;
+    color:white;
+    margin-top:10px;
+}
+
+.redeem{
+    width:100%;
+    background:#ff8f00;
+    color:white;
+}
+
+input,select{
+    width:100%;
+    padding:13px;
+    border:1px solid #ccc;
+    border-radius:8px;
+    margin:8px 0;
+    font-size:16px;
+}
+
+.hidden{
+    display:none;
+}
+
+.lesson{
+    background:white;
+    margin:10px 0;
+    padding:16px;
+    border-radius:12px;
+    box-shadow:0 2px 8px rgba(0,0,0,.08);
+}
+
+.lesson h3{
+    color:#1565c0;
+}
+
+.lock{
+    text-align:center;
+    padding-top:30px;
+}
+
+.settings{
+    background:white;
+    padding:20px;
+    border-radius:15px;
+}
+
+.small{
+    color:#666;
+    font-size:13px;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <h2>📚 Smart Course</h2>
+    <div>
+        <button onclick="openSettings()">⚙️</button>
+        <button onclick="logout()">Logout</button>
+    </div>
+</header>
+
+
+<!-- LOCK SCREEN -->
+
+<div id="lockScreen" class="container">
+
+    <div class="card lock">
+
+        <h1>🔒 Course Locked</h1>
+
+        <p>
+            Smart Course खरीदकर सभी lessons पढ़ें।
+        </p>
+
+        <div class="price">₹29</div>
+
+        <p>
+            एक बार खरीदें और Course को Unlock करें।
+        </p>
+
+        <button class="pay" onclick="payNow()">
+            💳 ₹29 Pay Now
+        </button>
+
+        <hr>
+
+        <h3>🎁 Redeem Code</h3>
+
+        <input
+            type="text"
+            id="redeemInput"
+            placeholder="Redeem Code डालें"
+        >
+
+        <button class="redeem" onclick="redeemCode()">
+            🔓 Unlock Course
+        </button>
+
+        <p class="small">
+            Demo Codes: SMART001 से SMART010
+        </p>
+
+    </div>
+
+</div>
+
+
+<!-- COURSE -->
+
+<div id="courseScreen" class="container hidden">
+
+    <div class="card">
+
+        <h1>🎓 Smart Course</h1>
+
+        <p>
+            आपका Course सफलतापूर्वक Unlock हो गया है।
+        </p>
+
+        <p>
+            नीचे सभी lessons दिए गए हैं।
+        </p>
+
+    </div>
+
+    <div id="lessons"></div>
+
+</div>
+
+
+<!-- SETTINGS -->
+
+<div id="settingsScreen" class="container hidden">
+
+    <div class="settings">
+
+        <h2>⚙️ Settings</h2>
+
+        <h3>🌐 Language</h3>
+
+        <select id="language">
+
+            <option>Hindi</option>
+            <option>English</option>
+            <option>Marathi</option>
+            <option>Punjabi</option>
+            <option>Chhattisgarhi</option>
+            <option>Bengali</option>
+            <option>Gujarati</option>
+            <option>Assamese</option>
+            <option>Odia</option>
+            <option>Tamil</option>
+            <option>Telugu</option>
+            <option>Kannada</option>
+            <option>Malayalam</option>
+            <option>Urdu</option>
+            <option>Sanskrit</option>
+            <option>Nepali</option>
+
+        </select>
+
+        <button onclick="closeSettings()">
+            ⬅️ वापस Course
+        </button>
+
+    </div>
+
+</div>
+
+
+<script>
+
+/* =========================
+   PAYMENT
+========================= */
+
+function payNow(){
+
+    /*
+    यहां अपना UPI ID डालें।
+    उदाहरण:
+    yourname@upi
+    */
+
+    let upi = "YOUR_UPI_ID@upi";
+
+    /* Course Price = ₹29 */
+    let amount = "29";
+
+    let url =
+        "upi://pay" +
+        "?pa=" + encodeURIComponent(upi) +
+        "&pn=" + encodeURIComponent("Smart Course") +
+        "&am=" + amount +
+        "&cu=INR";
+
+    window.location.href = url;
+}
+
+
+/* =========================
+   REDEEM CODE
+========================= */
+
+function redeemCode(){
+
+    let code =
+        document.getElementById("redeemInput")
+        .value
+        .trim()
+        .toUpperCase();
+
+    let validCodes = [
+
+        "SMART001",
+        "SMART002",
+        "SMART003",
+        "SMART004",
+        "SMART005",
+        "SMART006",
+        "SMART007",
+        "SMART008",
+        "SMART009",
+        "SMART010"
+
+    ];
+
+    if(validCodes.includes(code)){
+
+        localStorage.setItem(
+            "smartCourseUnlocked",
+            "yes"
+        );
+
+        alert("🎉 Course Successfully Unlocked!");
+
+        showCourse();
+
+    }else{
+
+        alert("❌ गलत Redeem Code");
+
+    }
+}
+
+
+/* =========================
+   COURSE CHECK
+========================= */
+
+function checkCourse(){
+
+    let unlocked =
+        localStorage.getItem(
+            "smartCourseUnlocked"
+        );
+
+    if(unlocked === "yes"){
+
+        showCourse();
+
+    }else{
+
+        document
+        .getElementById("lockScreen")
+        .classList.remove("hidden");
+
+        document
+        .getElementById("courseScreen")
+        .classList.add("hidden");
+
+    }
+}
+
+
+/* =========================
+   SHOW COURSE
+========================= */
+
+function showCourse(){
+
+    document
+    .getElementById("lockScreen")
+    .classList.add("hidden");
+
+    document
+    .getElementById("settingsScreen")
+    .classList.add("hidden");
+
+    document
+    .getElementById("courseScreen")
+    .classList.remove("hidden");
+
+}
+
+
+/* =========================
+   SETTINGS
+========================= */
+
+function openSettings(){
+
+    document
+    .getElementById("lockScreen")
+    .classList.add("hidden");
+
+    document
+    .getElementById("courseScreen")
+    .classList.add("hidden");
+
+    document
+    .getElementById("settingsScreen")
+    .classList.remove("hidden");
+
+}
+
+
+function closeSettings(){
+
+    document
+    .getElementById("settingsScreen")
+    .classList.add("hidden");
+
+    checkCourse();
+
+}
+
+
+/* =========================
+   LOGOUT
+========================= */
+
+function logout(){
+
+    localStorage.removeItem(
+        "smartCourseUnlocked"
+    );
+
+    alert("आप Logout हो गए हैं।");
+
+    location.reload();
+
+}
+
+
+/* =========================
+   LESSON DATA
+========================= */
+
+let lessons = [
+
+{
+title:"1. हिंदी परिचय",
+text:`
+नमस्ते! मेरा नाम किशन है।<br>
+मैं एक विद्यार्थी हूँ।<br>
+मैं भारत में रहता हूँ।<br>
+मुझे नई चीजें सीखना पसंद है।
+`
+},
+
+{
+title:"2. English Introduction",
+text:`
+My name is Kisan.<br>
+I am a student.<br>
+I am learning English.<br>
+I live in India.<br>
+I like learning new things.
+`
+},
+
+{
+title:"3. Basic English Words",
+text:`
+What = क्या<br>
+Which = कौन सा<br>
+Where = कहाँ<br>
+When = कब<br>
+Why = क्यों<br>
+Who = कौन<br>
+How = कैसे<br>
+Yes = हाँ<br>
+No = नहीं<br>
+Good = अच्छा
+`
+},
+
+{
+title:"4. भारत की जानकारी",
+text:`
+देश = भारत<br>
+राजधानी = नई दिल्ली<br>
+मुद्रा = भारतीय रुपया<br>
+राष्ट्रीय पशु = ब
+
+
